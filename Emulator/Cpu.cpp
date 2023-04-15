@@ -6,6 +6,11 @@
 #define MEMORY_LENGTH 512;
 
 Cpu::Cpu(GraphicsAdapter *graphics) {
+    // zero out registers
+    for(int i = 0; i < 16; i ++) {
+        this->registers[i] = 0;
+    }
+
     this->graphics = graphics;
     this->load_rom();
     this->start();
@@ -24,9 +29,12 @@ void Cpu::start() {
         // sprite number is 0-15 decimal
         uint8_t nth_sprite = (instruction & 0x000F);
 
-        std::cout << "decoded instruction " << instruction << ' ' << (int) x_register << ' ' << (int)y_register << '\n';
+        uint8_t constant = (instruction & 0x00FF);
 
-        execute(decode(instruction), x_register, y_register, mem_addr, nth_sprite);
+        if (execute(decode(instruction), x_register, y_register, mem_addr, nth_sprite, constant) < 0) {
+            std::cout << "decode failure\n";
+            break;
+        }
     }
 }
 /** Fetches next instruction
@@ -38,13 +46,13 @@ uint16_t Cpu::load(uint16_t address) {
     uint16_t high = this->memory[address] << 8;
     uint16_t low = this->memory[address + 1];
 
-    std::cout << "assembled " << (int) high+low << '\n';
     return high+low;
 }
 
-void Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_register, uint16_t mem_addr, uint8_t nth_sprite) {
+int Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_register, uint16_t mem_addr, uint8_t nth_sprite, uint8_t constant) {
     switch (instruction) {
         case Instruction::ClearScreen:
+            this->graphics->clear();
             std::cout << "clearing screen\n";
             break;
         case Instruction::Return:
@@ -61,7 +69,7 @@ void Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_registe
         case Instruction::SkipNextXEqualsY:
             break;
         case Instruction::LoadXWithValue:
-            std::cout << "loading register with value\n";
+            this->registers[x_register] = constant;
             break;
         case Instruction::AddXWithValue:
             std::cout << "adding x with value\n";
@@ -87,6 +95,7 @@ void Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_registe
         case Instruction::SkipNextInstructionXNotEqualY:
             break;
         case Instruction::LoadIWithAddress:
+            this->i = mem_addr;
             std::cout << "loading i with value\n";
             break;
         case Instruction::JumpLocationPlusV0:
@@ -94,6 +103,7 @@ void Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_registe
         case Instruction::SetXRandomByteANDKK:
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
+            std::cout << " drawing at  " << this->registers[x_register] << " " << this->registers[y_register] << std::endl;
             this->graphics->draw(this->registers[x_register], this->registers[y_register]);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
@@ -119,9 +129,9 @@ void Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_registe
         case Instruction::ReadIIntoRegistersStartingFromXAtI:
             break;
         default:
-            std::cout << "unknown instruction\n";
+            return -1;
     }
-    return;
+    return 0;
 }
 
 /** Given a uint, assemble it into an instruction
@@ -150,7 +160,7 @@ void Cpu::load_rom() {
     }
 
     for (i = 0; i < 512; i+=1) {
-        std::cout << std::hex << (int) this->memory[i] << ' ' << i << '\n';
+        //std::cout << std::hex << (int) this->memory[i] << ' ' << i << '\n';
     }
 
     f1.close();

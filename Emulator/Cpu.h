@@ -26,7 +26,7 @@ public:
     void test_decode();
     void start();
     Instruction decode(uint16_t instruction);
-    void execute(Instruction instruction, uint8_t x_register, uint8_t y_register, uint16_t mem_addr, uint8_t nth_sprite);
+    int execute(Instruction instruction, uint8_t x_register, uint8_t y_register, uint16_t mem_addr, uint8_t nth_sprite, uint8_t constant);
     uint16_t load(uint16_t);
 };
 
