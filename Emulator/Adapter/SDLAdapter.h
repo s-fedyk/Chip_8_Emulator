@@ -14,7 +14,8 @@ class SDLAdapter: public GraphicsAdapter {
 public:
     SDLAdapter(SDL_Renderer *renderer);
     ~SDLAdapter();
-    void draw(int x, int y) override;
+    void draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) override;
+    void draw(uint8_t x, uint8_t y);
     void clear() override;
     void free_content();
 

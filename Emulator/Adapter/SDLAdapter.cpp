@@ -5,7 +5,31 @@
 #include "SDLAdapter.h"
 #include <iostream>
 
-void SDLAdapter::draw(int x, int y) {
+/** draw an entire sprite
+ *
+ * @param x
+ * @param y
+ * @param sprite
+ * @param sprite_length
+ */
+void SDLAdapter::draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) {
+    for (int height = 0; height < sprite_length; height++) {
+        uint8_t current_sprite = sprite[height];
+        std::cout << std::hex << (int)current_sprite << std::endl;
+        for (int width = 0; width < 8; width++) {
+            if ((bool)( (current_sprite >> (7-width) & 1))) {
+                this->draw(x+width, y+height);
+            }
+        }
+    }
+}
+
+/** draw a single box
+ * @param x
+ * @param y
+ */
+void SDLAdapter::draw(uint8_t x, uint8_t y) {
+    std::cout << "drawing" << std::endl;
     if (x > 64 || y > 32 || x < 0 || y < 0) {
         std::cout << "Warning: out of bounds draw occured\n";
     }

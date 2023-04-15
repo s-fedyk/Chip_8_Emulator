@@ -3,30 +3,33 @@
 //
 #include "Cpu.h"
 #include "Instruction/InstructionFactory.h"
+
 #define MEMORY_LENGTH 512;
+
+
 
 Cpu::Cpu(GraphicsAdapter *graphics) {
     // zero out registers
-    for(int i = 0; i < 16; i ++) {
-        this->registers[i] = 0;
-    }
+    memset(this->registers, 0x00, sizeof(uint8_t) * 16);
 
     this->graphics = graphics;
+    this->i = 0;
+
     this->load_rom();
     this->start();
 }
 
 void Cpu::start() {
     // jump by twos since a single instruciton is 16-bit
-    for (this->pc; this->pc < 512; this->pc+=2) {
+    for (this->pc; this->pc < 1024; this->pc+=2) {
         uint16_t instruction = load(this->pc);
 
-        // registers are 4-bit
+        // registers are uint_4
         uint8_t x_register = (instruction & 0x0F00) >> 8;
         uint8_t y_register = (instruction & 0x00F0) >> 4;
-        // mem-addr is actually 12-bit max
+        // mem-addr is actually uint_12 but cpp doesnt have this
         uint16_t mem_addr = (instruction & 0x0FFF);
-        // sprite number is 0-15 decimal
+        // sprite number is  uint_4
         uint8_t nth_sprite = (instruction & 0x000F);
 
         uint8_t constant = (instruction & 0x00FF);
@@ -109,8 +112,8 @@ int Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_register
         case Instruction::SetXRandomByteANDKK:
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
-            std::cout << " drawing at  " << this->registers[x_register] << " " << this->registers[y_register] << std::endl;
-            this->graphics->draw(this->registers[x_register], this->registers[y_register]);
+            std::cout << " drawing at  " << this->registers[x_register] << " " << this->registers[y_register] << "length of " << nth_sprite <<std::endl;
+            this->graphics->draw_sprite(this->registers[x_register], this->registers[y_register],&this->memory[i],nth_sprite);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
             break;
@@ -153,11 +156,12 @@ Instruction Cpu::decode(uint16_t instruction) {
 void Cpu::load_rom() {
     std::ifstream f1 ("rom.ch8", std::ios::binary);
 
-    // zero out residual mem (do i even have to do this?)
-    for (i = 0; i < 512; ++i){
-        this->memory[i] = 0x00;
-    }
-    int index = 0;
+    // zero out residual mem
+    memset(this->memory, 0, 1024*sizeof(uint8_t));
+    // font copying
+    memcpy(this->memory, this->FONTS, 80 * sizeof(uint8_t));
+
+    int index = 0x200;
 
     // rom loading.
     for (auto start = std::istreambuf_iterator<char>{ f1 }, end = std::istreambuf_iterator<char>{}; start != end; ++start) {
@@ -165,8 +169,8 @@ void Cpu::load_rom() {
         index+=1;
     }
 
-    for (i = 0; i < 512; i+=1) {
-        //std::cout << std::hex << (int) this->memory[i] << ' ' << i << '\n';
+    for (index = 0; index < 1024; index+=1) {
+        std::cout << std::hex << (int) this->memory[i] << ' ' << i << '\n';
     }
 
     f1.close();

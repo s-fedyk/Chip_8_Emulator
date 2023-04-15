@@ -6,9 +6,11 @@
 #define CHIP_8_EMULATOR_GRAPHICSADAPTER_H
 
 
+#include <cstdint>
+
 class GraphicsAdapter {
     public:
-    virtual void draw(int x,int y)=0;
+    virtual void draw_sprite(uint8_t x,uint8_t y, uint8_t* sprite, uint8_t sprite_length)=0;
     virtual void clear()=0;
 };
 
