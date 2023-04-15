@@ -1,0 +1,6 @@
+# ninja log v5
+0	851	1681532297923506747	CMakeFiles/Chip_8_Emulator.dir/main.cpp.o	79b901a4c9bbf243
+0	78	1681532339604757590	build.ninja	84701411be464aae
+659	718	1681532335373090887	Chip_8_Emulator	11ea4b986b85cb21
+6	57	1681532334712373837	CMakeFiles/Chip_8_Emulator.dir/Emulator/Instruction/InstructionFactory.cpp.o	256458d8d2920fa3
+5	659	1681532335310837676	CMakeFiles/Chip_8_Emulator.dir/Emulator/Cpu.cpp.o	9a0a168cd51edf08
