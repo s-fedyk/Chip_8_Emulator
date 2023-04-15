@@ -31,9 +31,15 @@ void Cpu::start() {
 
         uint8_t constant = (instruction & 0x00FF);
 
-        if (execute(decode(instruction), x_register, y_register, mem_addr, nth_sprite, constant) < 0) {
-            std::cout << "decode failure\n";
-            break;
+        Instruction result = decode(instruction);
+        if (result == Instruction::Undecoded) {
+            std::cout << "Decode failure, aborting\n";
+            return;
+        }
+
+        if (execute(result, x_register, y_register, mem_addr, nth_sprite, constant) < 0) {
+            std::cout << "Execute failure, aborting\n";
+            return;
         }
     }
 }

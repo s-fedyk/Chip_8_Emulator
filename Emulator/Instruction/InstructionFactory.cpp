@@ -108,4 +108,7 @@ Instruction InstructionFactory::create(uint16_t instruction) {
     else if ((instruction & 0xF0FF) == Instruction::ReadIIntoRegistersStartingFromXAtI) {
         return Instruction::ReadIIntoRegistersStartingFromXAtI;
     }
+    else {
+        return Instruction::Undecoded;
+    }
 }

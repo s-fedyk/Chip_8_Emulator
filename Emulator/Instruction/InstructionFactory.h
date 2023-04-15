@@ -6,6 +6,7 @@
 #define UNTITLED1_INSTRUCTIONFACTORY_H
 #include <cstdint>
 enum Instruction {
+    Undecoded,
     ClearScreen = 0x00E0,
     Return = 0x00EE,
     JumpToAddressAt = 0x1000, //1nnn
