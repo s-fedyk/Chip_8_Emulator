@@ -9,6 +9,7 @@
 #include <iostream>
 #include <filesystem>
 #include "Instruction/InstructionFactory.h"
+#include "Adapter/GraphicsAdapter.h"
 
 
 class Cpu {
@@ -18,10 +19,9 @@ public:
     uint16_t i;
     uint16_t stack[16];
     uint16_t pc = 0;
+    GraphicsAdapter *graphics;
 
-    Cpu();
-
-
+    Cpu(GraphicsAdapter *graphics);
     void load_rom();
     void test_decode();
     void start();

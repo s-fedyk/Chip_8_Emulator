@@ -5,7 +5,8 @@
 #include "Instruction/InstructionFactory.h"
 #define MEMORY_LENGTH 512;
 
-Cpu::Cpu() {
+Cpu::Cpu(GraphicsAdapter *graphics) {
+    this->graphics = graphics;
     this->load_rom();
     this->start();
 }
@@ -93,7 +94,7 @@ void Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_registe
         case Instruction::SetXRandomByteANDKK:
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
-            std::cout << "drawoing\n";
+            this->graphics->draw(this->registers[x_register], this->registers[y_register]);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
             break;
@@ -154,3 +155,4 @@ void Cpu::load_rom() {
 
     f1.close();
 }
+

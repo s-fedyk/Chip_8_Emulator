@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Emulator/Cpu.h"
+#include "Emulator/Adapter/SDLAdapter.h"
 #include <SDL2/SDL.h>
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -9,11 +10,26 @@ int main() {
                                           SDL_WINDOWPOS_CENTERED,
                                           680, 480,
                                           0);
-    SDL_Surface *window_surface = SDL_GetWindowSurface(window);
-    SDL_UpdateWindowSurface(window);
 
-    SDL_Delay(5000);
-    std::cout << "Hello, World!" << std::endl;
-    Cpu cpu = Cpu();
+    SDL_Renderer* renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
+
+    SDLAdapter adapter = SDLAdapter(renderer);
+    adapter.draw(30,30);
+    while (true)
+    {
+        SDL_Event event;
+        if (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+            {
+                break;
+            }
+        }
+    }
+
+    Cpu cpu = Cpu(&adapter);
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     return 0;
 }

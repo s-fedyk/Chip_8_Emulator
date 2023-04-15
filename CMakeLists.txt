@@ -3,7 +3,7 @@ project(Chip_8_Emulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Chip_8_Emulator ${MY_SOURCES} main.cpp Emulator/Cpu.cpp Emulator/Cpu.h Emulator/Instruction/InstructionFactory.cpp Emulator/Instruction/InstructionFactory.h)
+add_executable(Chip_8_Emulator ${MY_SOURCES} main.cpp Emulator/Cpu.cpp Emulator/Cpu.h Emulator/Instruction/InstructionFactory.cpp Emulator/Instruction/InstructionFactory.h Emulator/Adapter/GraphicsAdapter.cpp Emulator/Adapter/GraphicsAdapter.h Emulator/Adapter/SDLAdapter.cpp Emulator/Adapter/SDLAdapter.h)
 
 find_package(SDL2 REQUIRED COMPONENTS SDL2)
 
