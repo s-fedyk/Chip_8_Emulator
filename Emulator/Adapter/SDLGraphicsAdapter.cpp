@@ -2,7 +2,7 @@
 // Created by Stanislav Fedyk on 2023-04-14.
 //
 
-#include "SDLAdapter.h"
+#include "SDLGraphicsAdapter.h"
 #include <iostream>
 
 /** draw an entire sprite
@@ -12,7 +12,7 @@
  * @param sprite
  * @param sprite_length
  */
-void SDLAdapter::draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) {
+void SDLGraphicsAdapter::draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) {
     for (int height = 0; height < sprite_length; height++) {
         uint8_t current_sprite = sprite[height];
         std::cout << std::hex << (int)current_sprite << std::endl;
@@ -28,7 +28,7 @@ void SDLAdapter::draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t spri
  * @param x
  * @param y
  */
-void SDLAdapter::draw(uint8_t x, uint8_t y) {
+void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y) {
     std::cout << "drawing" << std::endl;
     if (x > 64 || y > 32 || x < 0 || y < 0) {
         std::cout << "Warning: out of bounds draw occured\n";
@@ -60,7 +60,7 @@ void SDLAdapter::draw(uint8_t x, uint8_t y) {
 /** Deallocates content buffer and clears screen
  *
  */
-void SDLAdapter::clear() {
+void SDLGraphicsAdapter::clear() {
     std::cout << this->content->size() << std::endl;
     this->free_content();
 
@@ -71,18 +71,18 @@ void SDLAdapter::clear() {
     SDL_RenderPresent(this->renderer);
 }
 
-SDLAdapter::SDLAdapter(SDL_Renderer *renderer) {
+SDLGraphicsAdapter::SDLGraphicsAdapter(SDL_Renderer *renderer) {
     this->content = new std::vector<SDL_Rect*>;
     this->content->clear();
     this->renderer = renderer;
 }
 
-SDLAdapter::~SDLAdapter() {
+SDLGraphicsAdapter::~SDLGraphicsAdapter() {
     free_content();
     delete(this->content);
 }
 
-void SDLAdapter::free_content() {
+void SDLGraphicsAdapter::free_content() {
     for (auto box : *this->content) {
         delete(box);
     }

@@ -10,6 +10,7 @@
 #include <filesystem>
 #include "Instruction/InstructionFactory.h"
 #include "Adapter/GraphicsAdapter.h"
+#include "Adapter/InputAdapter.h"
 
 
 class Cpu {
@@ -20,13 +21,21 @@ public:
     uint16_t stack[16];
     uint16_t pc = 0x200; // program starts at 200. store sprites and stuff before that
     GraphicsAdapter *graphics;
+    InputAdapter *input;
 
-    Cpu(GraphicsAdapter *graphics);
+    Cpu(GraphicsAdapter *graphics, InputAdapter *input);
     void load_rom();
     void test_decode();
     void start();
     Instruction decode(uint16_t instruction);
-    int execute(Instruction instruction, uint8_t x_register, uint8_t y_register, uint16_t mem_addr, uint8_t nth_sprite, uint8_t constant);
+    int execute(Instruction instruction,
+                uint8_t x_register,
+                uint8_t y_register,
+                uint16_t mem_addr,
+                uint8_t nth_sprite,
+                uint8_t constant,
+                uint8_t pressed_key);
+
     uint16_t load(uint16_t);
 
 private:

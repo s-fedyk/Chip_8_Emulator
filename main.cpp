@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Emulator/Cpu.h"
-#include "Emulator/Adapter/SDLAdapter.h"
+#include "Emulator/Adapter/SDLGraphicsAdapter.h"
+#include "Emulator/Adapter/SDLInputAdapter.h"
 #include <SDL2/SDL.h>
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -13,20 +14,10 @@ int main() {
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
 
-    SDLAdapter adapter = SDLAdapter(renderer);
-    Cpu cpu = Cpu(&adapter);
+    SDLGraphicsAdapter graphicsAdapter= SDLGraphicsAdapter(renderer);
+    SDLInputAdapter inputAdapter = SDLInputAdapter();
+    Cpu cpu = Cpu(&graphicsAdapter, &inputAdapter);
 
-    while (true)
-    {
-        SDL_Event event;
-        if (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                break;
-            }
-        }
-    }
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

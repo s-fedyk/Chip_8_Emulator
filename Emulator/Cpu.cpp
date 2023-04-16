@@ -6,13 +6,12 @@
 
 #define MEMORY_LENGTH 512;
 
-
-
-Cpu::Cpu(GraphicsAdapter *graphics) {
+Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input) {
     // zero out registers
     memset(this->registers, 0x00, sizeof(uint8_t) * 16);
 
     this->graphics = graphics;
+    this->input = input;
     this->i = 0;
 
     this->load_rom();
@@ -22,8 +21,13 @@ Cpu::Cpu(GraphicsAdapter *graphics) {
 void Cpu::start() {
     // jump by twos since a single instruciton is 16-bit
     for (this->pc; this->pc < 1024; this->pc+=2) {
-        uint16_t instruction = load(this->pc);
+        uint8_t pressed_key = this->input->poll_for_input_no_blocking();
 
+        if (pressed_key == 0) {
+            return;
+        }
+
+        uint16_t instruction = load(this->pc);
         // registers are uint_4
         uint8_t x_register = (instruction & 0x0F00) >> 8;
         uint8_t y_register = (instruction & 0x00F0) >> 4;
@@ -31,7 +35,6 @@ void Cpu::start() {
         uint16_t mem_addr = (instruction & 0x0FFF);
         // sprite number is  uint_4
         uint8_t nth_sprite = (instruction & 0x000F);
-
         uint8_t constant = (instruction & 0x00FF);
 
         Instruction result = decode(instruction);
@@ -40,7 +43,7 @@ void Cpu::start() {
             return;
         }
 
-        if (execute(result, x_register, y_register, mem_addr, nth_sprite, constant) < 0) {
+        if (execute(result, x_register, y_register, mem_addr, nth_sprite, constant, pressed_key) < 0) {
             std::cout << "Execute failure, aborting\n";
             return;
         }
@@ -58,7 +61,13 @@ uint16_t Cpu::load(uint16_t address) {
     return high+low;
 }
 
-int Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_register, uint16_t mem_addr, uint8_t nth_sprite, uint8_t constant) {
+int Cpu::execute(Instruction instruction,
+                 uint8_t x_register,
+                 uint8_t y_register,
+                 uint16_t mem_addr,
+                 uint8_t nth_sprite,
+                 uint8_t constant,
+                 uint8_t key_press) {
     switch (instruction) {
         case Instruction::ClearScreen:
             this->graphics->clear();
@@ -67,7 +76,7 @@ int Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_register
         case Instruction::Return:
             break;
         case Instruction::JumpToAddressAt:
-            std:: cout << "jumping\n";
+            this->pc = mem_addr - 2; // minus two because we increment by two right after this function
             break;
         case Instruction::CallAddressAt:
             break;
@@ -81,6 +90,7 @@ int Cpu::execute(Instruction instruction, uint8_t x_register, uint8_t y_register
             this->registers[x_register] = constant;
             break;
         case Instruction::AddXWithValue:
+            this->registers[x_register] += constant;
             std::cout << "adding x with value\n";
             break;
         case Instruction::LoadXWithValueInY:
