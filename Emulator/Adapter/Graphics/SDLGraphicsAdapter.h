@@ -15,7 +15,7 @@ public:
     SDLGraphicsAdapter(SDL_Renderer *renderer);
     ~SDLGraphicsAdapter();
     void draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) override;
-    void draw(uint8_t x, uint8_t y);
+    void draw_buffer(uint8_t x, uint8_t y);
     void clear() override;
     void free_content();
 

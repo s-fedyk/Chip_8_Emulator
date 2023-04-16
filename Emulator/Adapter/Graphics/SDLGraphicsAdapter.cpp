@@ -18,22 +18,21 @@ void SDLGraphicsAdapter::draw_sprite(uint8_t x,
 {
     for (int height = 0; height < sprite_length; height++) {
         uint8_t current_sprite = sprite[height];
-        std::cout << std::hex << (int)current_sprite << std::endl;
         for (int width = 0; width < 8; width++) {
             if ((bool)( (current_sprite >> (7-width) & 1))) {
-                this->draw(x+width, y+height);
+                this->draw_buffer(x+width, y+height);
             }
         }
     }
+    SDL_RenderPresent(this->renderer);
 }
 
-/** draw a single box
+/** draw a single box unto the buffer, and the box unto the existing content buffer
  * @param x
  * @param y
  */
-void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y)
+void SDLGraphicsAdapter::draw_buffer(uint8_t x, uint8_t y)
 {
-    std::cout << "drawing" << std::endl;
     if (x > 64 || y > 32 || x < 0 || y < 0) {
         std::cout << "Warning: out of bounds draw occured\n";
     }
@@ -57,8 +56,6 @@ void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y)
             std::cout << "render failure\n";
         }
     }
-
-    SDL_RenderPresent(this->renderer);
 }
 
 /** Deallocates content buffer and clears screen
@@ -66,7 +63,6 @@ void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y)
  */
 void SDLGraphicsAdapter::clear()
 {
-    std::cout << this->content->size() << std::endl;
     this->free_content();
 
     SDL_SetRenderDrawColor(this->renderer, 0,0,0,0);

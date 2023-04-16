@@ -30,11 +30,12 @@ private:
                 uint8_t pressed_key);
     // chip8 has a base sprite set for hex chars
     uint8_t memory[4096];
-    uint16_t registers[16];
+    uint8_t registers[16];
     uint16_t i;
     uint16_t stack[16];
     uint16_t pc = 0x200; // program starts at 0x200. store sprites and stuff before that
-    bool fc = false; // carry flag
+    uint8_t sp = 0x00; //stack pointer
+    uint8_t fc = 0x00; // carry flag
     GraphicsAdapter *graphics;
     InputAdapter *input;
     const uint8_t FONTS[80] = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

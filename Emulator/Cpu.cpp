@@ -18,7 +18,7 @@ Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input)
 void Cpu::start()
 {
     // jump by twos since a single instruciton is 16-bit
-    for (this->pc; this->pc < 1024; this->pc+=2) {
+    for (this->pc; this->pc < 4096; this->pc+=2) {
         uint8_t pressed_key = this->input->poll_for_input_no_blocking();
 
         // exit event for emulator (closed window)
@@ -75,11 +75,16 @@ int Cpu::execute(Instruction instruction,
             std::cout << "clearing screen\n";
             break;
         case Instruction::Return:
+            this->pc = this->stack[this->sp - 1];
+            this->sp -= 1;
             break;
         case Instruction::JumpToAddressAt:
             this->pc = mem_addr - 2; // minus two because we increment by two right after this function
             break;
         case Instruction::CallAddressAt:
+            this->stack[this->sp] = this->pc;
+            this->sp += 1;
+            this->pc = mem_addr - 2;
             break;
         case Instruction::SkipNextXEqualsConstant:
             if (this->registers[x_register] == constant) {
@@ -112,23 +117,43 @@ int Cpu::execute(Instruction instruction,
             this->registers[x_register] = this->registers[x_register] & this->registers[y_register];
             break;
         case Instruction::XORXWithY:
+            this->registers[x_register] = this->registers[x_register] ^ this->registers[y_register];
             break;
         case Instruction::AddXWithYSetCarry:
+            this->fc = (uint16_t(this->registers[x_register] + this->registers[y_register]) > 255) ? 0x01 : 0x00;
+            this->registers[x_register] = (this->registers[x_register] + this->registers[y_register]);
+            this->registers[15] = this->fc;
             break;
         case Instruction::SubXWithYSetBorrow:
+            this->fc = (this->registers[x_register] > this->registers[y_register]) ? 0x01 : 0x00;
+            this->registers[x_register] = this->registers[x_register] - this->registers[y_register];
+            this->registers[15] = this->fc;
             break;
         case Instruction::DivideByTwoSetCarry:
+            this->fc = ((bool)(this->registers[x_register] & 0x01)) ? 0x01 : 0x00;
+            this->registers[x_register] = this->registers[x_register] >> 1;
+            this->registers[15] = this->fc;
             break;
         case Instruction::SubYWithXSetBorrow:
+            this->fc = (this->registers[y_register] > this->registers[x_register]) ? 0x01 : 0x00;
+            this->registers[x_register] = this->registers[y_register] - this->registers[x_register];
+            this->registers[15] = this->fc;
             break;
         case Instruction::MultiplyXByTwoSetCarry:
+            this->fc = ((this->registers[x_register] & 0x80) > 0x00) ? 0x01 : 0x00;
+            this->registers[x_register] = this->registers[x_register] << 1;
+            this->registers[15] = this->fc;
             break;
         case Instruction::SkipNextInstructionXNotEqualY:
+            if (this->registers[x_register] != this->registers[y_register]) {
+                this->pc += 2;
+            }
             break;
         case Instruction::LoadIWithAddress:
             this->i = mem_addr;
             break;
         case Instruction::JumpLocationPlusV0:
+            this->pc = this->registers[0] + mem_addr - 2;
             break;
         case Instruction::SetXRandomByteANDKK:
             break;
@@ -151,14 +176,27 @@ int Cpu::execute(Instruction instruction,
         case Instruction::SetSoundTimerToX:
             break;
         case Instruction::AddXToI:
+            this->i += this->registers[x_register];
             break;
         case Instruction::SetIToSpriteAtDigitX:
             break;
         case Instruction::StoreBCDOfXAtI:
+            this->memory[i] = (this->registers[x_register] / 100);
+            this->memory[i+1] = ((this->registers[x_register] % 100) / 10);
+            this->memory[i+2] = (this->registers[x_register] % 100) % 10;
             break;
         case Instruction::StoreRegistersStartingFromXAtI:
+            std::cout << "storing registers\n";
+            for (uint8_t register_index = 0 ; register_index <= x_register; ++register_index) {
+
+                this->memory[this->i+register_index] = this->registers[register_index];
+            }
             break;
         case Instruction::ReadIIntoRegistersStartingFromXAtI:
+            std::cout <<"reading into registers\n";
+            for (uint8_t register_index = 0; register_index <= x_register; ++register_index) {
+                this->registers[register_index] = this->memory[this->i+register_index];
+            }
             break;
         default:
             return -1;
@@ -182,7 +220,7 @@ void Cpu::load_rom()
     std::ifstream f1 ("rom.ch8", std::ios::binary);
 
     // zero out residual mem
-    memset(this->memory, 0, 1024*sizeof(uint8_t));
+    memset(this->memory, 0, 4096*sizeof(uint8_t));
     // font copying
     memcpy(this->memory, this->FONTS, 80 * sizeof(uint8_t));
 
@@ -194,9 +232,7 @@ void Cpu::load_rom()
         index+=1;
     }
 
-    for (index = 0; index < 1024; index+=1) {
-        std::cout << std::hex << (int) this->memory[i] << ' ' << i << '\n';
-    }
+
 
     f1.close();
 }
