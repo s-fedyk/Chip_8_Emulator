@@ -5,7 +5,6 @@
 #ifndef CHIP_8_EMULATOR_SDLGRAPHICSADAPTER_H
 #define CHIP_8_EMULATOR_SDLGRAPHICSADAPTER_H
 
-
 #include <SDL_render.h>
 #include "GraphicsAdapter.h"
 #include <vector>

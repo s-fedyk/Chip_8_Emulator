@@ -97,4 +97,3 @@ void SDLGraphicsAdapter::free_content()
     }
     this->content->clear();
 }
-

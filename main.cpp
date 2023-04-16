@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Emulator/Cpu.h"
-#include "Emulator/Adapter/SDLGraphicsAdapter.h"
-#include "Emulator/Adapter/SDLInputAdapter.h"
+#include "Emulator/Adapter/Graphics/SDLGraphicsAdapter.h"
+#include "Emulator/Adapter/Input/SDLInputAdapter.h"
 #include <SDL2/SDL.h>
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -16,7 +16,7 @@ int main() {
     SDLGraphicsAdapter graphicsAdapter= SDLGraphicsAdapter(renderer);
     SDLInputAdapter inputAdapter = SDLInputAdapter();
 
-    Cpu cpu = Cpu(&graphicsAdapter, &inputAdapter);
+    Cpu(&graphicsAdapter, &inputAdapter);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
