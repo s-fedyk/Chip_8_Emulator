@@ -25,9 +25,8 @@ public:
 
     Cpu(GraphicsAdapter *graphics, InputAdapter *input);
     void load_rom();
-    void test_decode();
     void start();
-    Instruction decode(uint16_t instruction);
+    static Instruction decode(uint16_t instruction);
     int execute(Instruction instruction,
                 uint8_t x_register,
                 uint8_t y_register,

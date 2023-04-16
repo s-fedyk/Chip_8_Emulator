@@ -5,7 +5,6 @@
 #include <SDL2/SDL.h>
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
-
     SDL_Window *window = SDL_CreateWindow("SDL2 Window",
                                           SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED,
@@ -16,8 +15,8 @@ int main() {
 
     SDLGraphicsAdapter graphicsAdapter= SDLGraphicsAdapter(renderer);
     SDLInputAdapter inputAdapter = SDLInputAdapter();
-    Cpu cpu = Cpu(&graphicsAdapter, &inputAdapter);
 
+    Cpu cpu = Cpu(&graphicsAdapter, &inputAdapter);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

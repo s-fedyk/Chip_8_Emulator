@@ -4,9 +4,8 @@
 #include "Cpu.h"
 #include "Instruction/InstructionFactory.h"
 
-#define MEMORY_LENGTH 512;
-
-Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input) {
+Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input)
+{
     // zero out registers
     memset(this->registers, 0x00, sizeof(uint8_t) * 16);
 
@@ -18,12 +17,13 @@ Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input) {
     this->start();
 }
 
-void Cpu::start() {
+void Cpu::start()
+{
     // jump by twos since a single instruciton is 16-bit
     for (this->pc; this->pc < 1024; this->pc+=2) {
         uint8_t pressed_key = this->input->poll_for_input_no_blocking();
 
-        if (pressed_key == 0) {
+        if (pressed_key == 0xFF) {
             return;
         }
 
@@ -54,7 +54,8 @@ void Cpu::start() {
  * @param address
  * @return
  */
-uint16_t Cpu::load(uint16_t address) {
+uint16_t Cpu::load(uint16_t address)
+{
     uint16_t high = this->memory[address] << 8;
     uint16_t low = this->memory[address + 1];
 
@@ -67,7 +68,8 @@ int Cpu::execute(Instruction instruction,
                  uint16_t mem_addr,
                  uint8_t nth_sprite,
                  uint8_t constant,
-                 uint8_t key_press) {
+                 uint8_t key_press)
+{
     switch (instruction) {
         case Instruction::ClearScreen:
             this->graphics->clear();
@@ -91,9 +93,9 @@ int Cpu::execute(Instruction instruction,
             break;
         case Instruction::AddXWithValue:
             this->registers[x_register] += constant;
-            std::cout << "adding x with value\n";
             break;
         case Instruction::LoadXWithValueInY:
+            this->registers[x_register] = this->registers[y_register];
             break;
         case Instruction::OrXWithY:
             break;
@@ -115,14 +117,12 @@ int Cpu::execute(Instruction instruction,
             break;
         case Instruction::LoadIWithAddress:
             this->i = mem_addr;
-            std::cout << "loading i with value\n";
             break;
         case Instruction::JumpLocationPlusV0:
             break;
         case Instruction::SetXRandomByteANDKK:
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
-            std::cout << " drawing at  " << this->registers[x_register] << " " << this->registers[y_register] << "length of " << nth_sprite <<std::endl;
             this->graphics->draw_sprite(this->registers[x_register], this->registers[y_register],&this->memory[i],nth_sprite);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
@@ -157,13 +157,15 @@ int Cpu::execute(Instruction instruction,
  *
  * @return
  */
-Instruction Cpu::decode(uint16_t instruction) {
+Instruction Cpu::decode(uint16_t instruction)
+{
     return InstructionFactory::create(instruction);
 }
 /** Load the rom into memory
  *
  */
-void Cpu::load_rom() {
+void Cpu::load_rom()
+{
     std::ifstream f1 ("rom.ch8", std::ios::binary);
 
     // zero out residual mem

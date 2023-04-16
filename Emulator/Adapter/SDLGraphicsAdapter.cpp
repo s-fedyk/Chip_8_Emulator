@@ -9,10 +9,14 @@
  *
  * @param x
  * @param y
- * @param sprite
- * @param sprite_length
+ * @param sprite mem address of the sprite
+ * @param sprite_length the length of the sprite (in bytes)
  */
-void SDLGraphicsAdapter::draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) {
+void SDLGraphicsAdapter::draw_sprite(uint8_t x,
+                                     uint8_t y,
+                                     uint8_t *sprite,
+                                     uint8_t sprite_length)
+{
     for (int height = 0; height < sprite_length; height++) {
         uint8_t current_sprite = sprite[height];
         std::cout << std::hex << (int)current_sprite << std::endl;
@@ -28,7 +32,8 @@ void SDLGraphicsAdapter::draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint
  * @param x
  * @param y
  */
-void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y) {
+void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y)
+{
     std::cout << "drawing" << std::endl;
     if (x > 64 || y > 32 || x < 0 || y < 0) {
         std::cout << "Warning: out of bounds draw occured\n";
@@ -60,7 +65,8 @@ void SDLGraphicsAdapter::draw(uint8_t x, uint8_t y) {
 /** Deallocates content buffer and clears screen
  *
  */
-void SDLGraphicsAdapter::clear() {
+void SDLGraphicsAdapter::clear()
+{
     std::cout << this->content->size() << std::endl;
     this->free_content();
 
@@ -71,18 +77,21 @@ void SDLGraphicsAdapter::clear() {
     SDL_RenderPresent(this->renderer);
 }
 
-SDLGraphicsAdapter::SDLGraphicsAdapter(SDL_Renderer *renderer) {
+SDLGraphicsAdapter::SDLGraphicsAdapter(SDL_Renderer *renderer)
+{
     this->content = new std::vector<SDL_Rect*>;
     this->content->clear();
     this->renderer = renderer;
 }
 
-SDLGraphicsAdapter::~SDLGraphicsAdapter() {
+SDLGraphicsAdapter::~SDLGraphicsAdapter()
+{
     free_content();
     delete(this->content);
 }
 
-void SDLGraphicsAdapter::free_content() {
+void SDLGraphicsAdapter::free_content()
+{
     for (auto box : *this->content) {
         delete(box);
     }
