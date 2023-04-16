@@ -164,12 +164,21 @@ int Cpu::execute(Instruction instruction,
                                         nth_sprite);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
+            if (input->poll_for_input_blocking() == this->registers[x_register]) {
+                this->pc += 2;
+                std::cout << "keys equal" << std::endl;
+            }
             break;
         case Instruction::SkipNextInstructionKeyXNotPressed:
+            if (input->poll_for_input_blocking() != this->registers[x_register]) {
+                this->pc += 2;
+                std::cout << "keys not equal" << std::endl;
+            }
             break;
         case Instruction::PlaceIntoXDelayTimer:
             break;
         case Instruction::WaitAndPlaceKeyIntoX:
+            this->registers[x_register] = this->input->poll_for_input_blocking();
             break;
         case Instruction::SetDelayTimerToX:
             break;

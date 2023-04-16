@@ -27,7 +27,7 @@ void SDLGraphicsAdapter::draw_sprite(uint8_t x,
     SDL_RenderPresent(this->renderer);
 }
 
-/** draw a single box unto the buffer, and the box unto the existing content buffer
+/** draw a single box unto the buffer (not drawn immediately)
  * @param x
  * @param y
  */
@@ -67,7 +67,7 @@ void SDLGraphicsAdapter::clear()
 
     SDL_SetRenderDrawColor(this->renderer, 0,0,0,0);
     if (SDL_RenderClear(this->renderer) < 0) {
-        std::cout << "render clera error\n";
+        std::cout << "render clear error\n";
     }
     SDL_RenderPresent(this->renderer);
 }
