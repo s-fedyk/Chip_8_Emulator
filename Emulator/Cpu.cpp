@@ -2,7 +2,6 @@
 // Created by Stanislav Fedyk on 2023-04-12.
 //
 #include "Cpu.h"
-#include "Instruction/InstructionFactory.h"
 
 Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input)
 {
@@ -11,7 +10,6 @@ Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input)
 
     this->graphics = graphics;
     this->input = input;
-    this->i = 0;
 
     this->load_rom();
     this->start();
@@ -23,6 +21,7 @@ void Cpu::start()
     for (this->pc; this->pc < 1024; this->pc+=2) {
         uint8_t pressed_key = this->input->poll_for_input_no_blocking();
 
+        // exit event for emulator (closed window)
         if (pressed_key == 0xFF) {
             return;
         }
@@ -83,10 +82,19 @@ int Cpu::execute(Instruction instruction,
         case Instruction::CallAddressAt:
             break;
         case Instruction::SkipNextXEqualsConstant:
+            if (this->registers[x_register] == constant) {
+                this->pc += 2;
+            }
             break;
         case Instruction::SkipNextXNotEqualsConstant:
+            if (this->registers[x_register] != constant) {
+                this->pc += 2;
+            }
             break;
         case Instruction::SkipNextXEqualsY:
+            if (this->registers[x_register] == this->registers[y_register]) {
+                this->pc += 2;
+            }
             break;
         case Instruction::LoadXWithValue:
             this->registers[x_register] = constant;
@@ -98,8 +106,10 @@ int Cpu::execute(Instruction instruction,
             this->registers[x_register] = this->registers[y_register];
             break;
         case Instruction::OrXWithY:
+            this->registers[x_register] = this->registers[x_register] | this->registers[y_register];
             break;
         case Instruction::AndXWithY:
+            this->registers[x_register] = this->registers[x_register] & this->registers[y_register];
             break;
         case Instruction::XORXWithY:
             break;
@@ -123,7 +133,10 @@ int Cpu::execute(Instruction instruction,
         case Instruction::SetXRandomByteANDKK:
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
-            this->graphics->draw_sprite(this->registers[x_register], this->registers[y_register],&this->memory[i],nth_sprite);
+            this->graphics->draw_sprite(this->registers[x_register],
+                                        this->registers[y_register],
+                                        &this->memory[i],
+                                        nth_sprite);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
             break;

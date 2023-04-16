@@ -8,6 +8,7 @@
 
 #include "InputAdapter.h"
 #include <SDL_events.h>
+#include <iostream>
 
 class SDLInputAdapter : public InputAdapter {
     uint8_t poll_for_input_blocking() override;

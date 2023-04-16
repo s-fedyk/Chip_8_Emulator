@@ -7,6 +7,7 @@
 
 #include <SDL_render.h>
 #include "GraphicsAdapter.h"
+#include <iostream>
 #include <vector>
 
 class SDLGraphicsAdapter: public GraphicsAdapter {

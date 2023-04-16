@@ -67,26 +67,12 @@ build CMakeFiles/Chip_8_Emulator.dir/Emulator/Instruction/InstructionFactory.cpp
   OBJECT_DIR = CMakeFiles/Chip_8_Emulator.dir
   OBJECT_FILE_DIR = CMakeFiles/Chip_8_Emulator.dir/Emulator/Instruction
 
-build CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/GraphicsAdapter.cpp.o: CXX_COMPILER__Chip_8_Emulator_Debug /Users/stanislavfedyk/CLionProjects/Chip_8_Emulator/Emulator/Adapter/Graphics/GraphicsAdapter.cpp || cmake_object_order_depends_target_Chip_8_Emulator
-  DEP_FILE = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/GraphicsAdapter.cpp.o.d
-  FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6 -F /Users/stanislavfedyk/Library/Frameworks/ -std=gnu++14
-  INCLUDES = -isystem /Users/stanislavfedyk/Library/Frameworks/SDL2.framework/Headers -iframework /Users/stanislavfedyk/Library/Frameworks
-  OBJECT_DIR = CMakeFiles/Chip_8_Emulator.dir
-  OBJECT_FILE_DIR = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics
-
 build CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/SDLGraphicsAdapter.cpp.o: CXX_COMPILER__Chip_8_Emulator_Debug /Users/stanislavfedyk/CLionProjects/Chip_8_Emulator/Emulator/Adapter/Graphics/SDLGraphicsAdapter.cpp || cmake_object_order_depends_target_Chip_8_Emulator
   DEP_FILE = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/SDLGraphicsAdapter.cpp.o.d
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6 -F /Users/stanislavfedyk/Library/Frameworks/ -std=gnu++14
   INCLUDES = -isystem /Users/stanislavfedyk/Library/Frameworks/SDL2.framework/Headers -iframework /Users/stanislavfedyk/Library/Frameworks
   OBJECT_DIR = CMakeFiles/Chip_8_Emulator.dir
   OBJECT_FILE_DIR = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics
-
-build CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/InputAdapter.cpp.o: CXX_COMPILER__Chip_8_Emulator_Debug /Users/stanislavfedyk/CLionProjects/Chip_8_Emulator/Emulator/Adapter/Input/InputAdapter.cpp || cmake_object_order_depends_target_Chip_8_Emulator
-  DEP_FILE = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/InputAdapter.cpp.o.d
-  FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6 -F /Users/stanislavfedyk/Library/Frameworks/ -std=gnu++14
-  INCLUDES = -isystem /Users/stanislavfedyk/Library/Frameworks/SDL2.framework/Headers -iframework /Users/stanislavfedyk/Library/Frameworks
-  OBJECT_DIR = CMakeFiles/Chip_8_Emulator.dir
-  OBJECT_FILE_DIR = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input
 
 build CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/SDLInputAdapter.cpp.o: CXX_COMPILER__Chip_8_Emulator_Debug /Users/stanislavfedyk/CLionProjects/Chip_8_Emulator/Emulator/Adapter/Input/SDLInputAdapter.cpp || cmake_object_order_depends_target_Chip_8_Emulator
   DEP_FILE = CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/SDLInputAdapter.cpp.o.d
@@ -103,7 +89,7 @@ build CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/SDLInputAdapter.cpp.
 #############################################
 # Link the executable Chip_8_Emulator
 
-build Chip_8_Emulator: CXX_EXECUTABLE_LINKER__Chip_8_Emulator_Debug CMakeFiles/Chip_8_Emulator.dir/main.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Cpu.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Instruction/InstructionFactory.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/GraphicsAdapter.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/SDLGraphicsAdapter.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/InputAdapter.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/SDLInputAdapter.cpp.o
+build Chip_8_Emulator: CXX_EXECUTABLE_LINKER__Chip_8_Emulator_Debug CMakeFiles/Chip_8_Emulator.dir/main.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Cpu.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Instruction/InstructionFactory.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Graphics/SDLGraphicsAdapter.cpp.o CMakeFiles/Chip_8_Emulator.dir/Emulator/Adapter/Input/SDLInputAdapter.cpp.o
   FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6
   LINK_FLAGS = -F /Users/stanislavfedyk/Library/Frameworks/ -framework SDL2
   OBJECT_DIR = CMakeFiles/Chip_8_Emulator.dir

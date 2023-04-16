@@ -3,7 +3,6 @@
 //
 
 #include "SDLGraphicsAdapter.h"
-#include <iostream>
 
 /** draw an entire sprite
  *

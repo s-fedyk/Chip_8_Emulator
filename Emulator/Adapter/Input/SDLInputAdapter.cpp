@@ -2,9 +2,7 @@
 // Created by Stanislav Fedyk on 2023-04-15.
 //
 
-
 #include "SDLInputAdapter.h"
-#include <iostream>
 
 uint8_t SDLInputAdapter::poll_for_input_no_blocking()
 {

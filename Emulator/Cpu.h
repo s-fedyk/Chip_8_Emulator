@@ -34,6 +34,7 @@ private:
     uint16_t i;
     uint16_t stack[16];
     uint16_t pc = 0x200; // program starts at 0x200. store sprites and stuff before that
+    bool fc = false; // carry flag
     GraphicsAdapter *graphics;
     InputAdapter *input;
     const uint8_t FONTS[80] = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
