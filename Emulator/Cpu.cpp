@@ -17,13 +17,11 @@ Cpu::Cpu(GraphicsAdapter *graphics, InputAdapter *input)
 
 void Cpu::start()
 {
+    memset(this->keyboard,0, 16*sizeof(bool));
     // jump by twos since a single instruciton is 16-bit
     for (this->pc; this->pc < 4096; this->pc+=2) {
-        uint8_t pressed_key = this->input->poll_for_input_no_blocking();
-
-        // exit event for emulator (closed window)
-        if (pressed_key == 0xFF) {
-            return;
+        if (this->input->poll_for_input_no_blocking(this->keyboard) < 0) {
+            break;
         }
 
         uint16_t instruction = load(this->pc);
@@ -42,7 +40,7 @@ void Cpu::start()
             return;
         }
 
-        if (execute(result, x_register, y_register, mem_addr, nth_sprite, constant, pressed_key) < 0) {
+        if (execute(result, x_register, y_register, mem_addr, nth_sprite, constant) < 0) {
             std::cout << "Execute failure, aborting\n";
             return;
         }
@@ -66,13 +64,11 @@ int Cpu::execute(Instruction instruction,
                  uint8_t y_register,
                  uint16_t mem_addr,
                  uint8_t nth_sprite,
-                 uint8_t constant,
-                 uint8_t key_press)
+                 uint8_t constant)
 {
     switch (instruction) {
         case Instruction::ClearScreen:
             this->graphics->clear();
-            std::cout << "clearing screen\n";
             break;
         case Instruction::Return:
             this->pc = this->stack[this->sp - 1];
@@ -164,15 +160,13 @@ int Cpu::execute(Instruction instruction,
                                         nth_sprite);
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
-            if (input->poll_for_input_blocking() == this->registers[x_register]) {
+            if (this->keyboard[this->registers[x_register]]) {
                 this->pc += 2;
-                std::cout << "keys equal" << std::endl;
             }
             break;
         case Instruction::SkipNextInstructionKeyXNotPressed:
-            if (input->poll_for_input_blocking() != this->registers[x_register]) {
+            if (!this->keyboard[this->registers[x_register]]) {
                 this->pc += 2;
-                std::cout << "keys not equal" << std::endl;
             }
             break;
         case Instruction::PlaceIntoXDelayTimer:
@@ -195,14 +189,12 @@ int Cpu::execute(Instruction instruction,
             this->memory[i+2] = (this->registers[x_register] % 100) % 10;
             break;
         case Instruction::StoreRegistersStartingFromXAtI:
-            std::cout << "storing registers\n";
             for (uint8_t register_index = 0 ; register_index <= x_register; ++register_index) {
 
                 this->memory[this->i+register_index] = this->registers[register_index];
             }
             break;
         case Instruction::ReadIIntoRegistersStartingFromXAtI:
-            std::cout <<"reading into registers\n";
             for (uint8_t register_index = 0; register_index <= x_register; ++register_index) {
                 this->registers[register_index] = this->memory[this->i+register_index];
             }

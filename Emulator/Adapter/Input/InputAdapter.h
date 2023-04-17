@@ -9,7 +9,7 @@
 
 class InputAdapter {
 public:
-    virtual uint8_t poll_for_input_no_blocking()=0;
+    virtual int poll_for_input_no_blocking(bool keyboard[])=0;
     virtual uint8_t poll_for_input_blocking()=0;
 };
 

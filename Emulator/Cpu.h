@@ -26,12 +26,12 @@ private:
                 uint8_t y_register,
                 uint16_t mem_addr,
                 uint8_t nth_sprite,
-                uint8_t constant,
-                uint8_t pressed_key);
+                uint8_t constant);
     uint8_t memory[4096];
     uint8_t registers[16];
     uint16_t i;
     uint16_t stack[16];
+    bool keyboard[16]; // keeps track of what is pressed
     uint16_t pc = 0x200; // program starts at 0x200. store sprites and stuff before that
     uint8_t sp = 0x00; //stack pointer
     uint8_t fc = 0x00; // carry flag, carry register is at position 15

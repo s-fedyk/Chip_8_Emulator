@@ -12,7 +12,7 @@
 
 class SDLInputAdapter : public InputAdapter {
     uint8_t poll_for_input_blocking() override;
-    uint8_t poll_for_input_no_blocking() override;
+    int poll_for_input_no_blocking(bool keyboard[]) override;
 };
 
 
