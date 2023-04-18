@@ -16,12 +16,13 @@ public:
     ~SDLGraphicsAdapter();
     void draw_sprite(uint8_t x, uint8_t y, uint8_t *sprite, uint8_t sprite_length) override;
     void draw_buffer(uint8_t x, uint8_t y);
+    void refresh_screen();
     void clear() override;
     void free_content();
 
 private:
     SDL_Renderer *renderer;
-    std::vector<SDL_Rect*> *content;
+    SDL_Rect* screen[32][64];
 };
 
 #endif //CHIP_8_EMULATOR_SDLGRAPHICSADAPTER_H

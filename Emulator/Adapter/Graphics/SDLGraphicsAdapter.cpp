@@ -24,6 +24,8 @@ void SDLGraphicsAdapter::draw_sprite(uint8_t x,
             }
         }
     }
+
+    this->refresh_screen();
     SDL_RenderPresent(this->renderer);
 }
 
@@ -42,19 +44,16 @@ void SDLGraphicsAdapter::draw_buffer(uint8_t x, uint8_t y)
         std::cout << "render clear error" << std::endl;
     }
 
-    auto *new_box = new SDL_Rect();
-    new_box->h = 10;
-    new_box->w = 10;
-    new_box->x = x*10;
-    new_box->y = y*10;
-    this->content->push_back(new_box);
-
-    SDL_SetRenderDrawColor(this->renderer, 255,255,255,0);
-
-    for (auto box: *this->content) {
-        if (SDL_RenderFillRect(this->renderer, box) < 0) {
-            std::cout << "render failure\n";
-        }
+    if (this->screen[y][x] == nullptr) {
+        auto *new_box = new SDL_Rect();
+        new_box->h = 10;
+        new_box->w = 10;
+        new_box->x = x*10;
+        new_box->y = y*10;
+        this->screen[y][x] = new_box;
+    } else {
+        delete(this->screen[y][x]);
+        this->screen[y][x] = nullptr;
     }
 }
 
@@ -74,21 +73,32 @@ void SDLGraphicsAdapter::clear()
 
 SDLGraphicsAdapter::SDLGraphicsAdapter(SDL_Renderer *renderer)
 {
-    this->content = new std::vector<SDL_Rect*>;
-    this->content->clear();
+    memset(this->screen,0,32*64*sizeof(SDL_Rect*));
     this->renderer = renderer;
 }
 
 SDLGraphicsAdapter::~SDLGraphicsAdapter()
 {
     free_content();
-    delete(this->content);
 }
 
 void SDLGraphicsAdapter::free_content()
 {
-    for (auto box : *this->content) {
-        delete(box);
+    memset(this->screen, 0, 64*32*sizeof(SDL_Rect*));
+}
+
+/**
+ * Goes through the screen buffer and draws
+ */
+void SDLGraphicsAdapter::refresh_screen() {
+    SDL_SetRenderDrawColor(this->renderer, 255,255,255,0);
+    for (auto & y : this->screen) {
+        for (auto & x : y) {
+            if (x != nullptr) {
+                if (SDL_RenderFillRect(this->renderer, x) < 0) {
+                    std::cout << "render failure\n";
+                }
+            }
+        }
     }
-    this->content->clear();
 }
