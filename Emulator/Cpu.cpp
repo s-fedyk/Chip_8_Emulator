@@ -154,10 +154,12 @@ int Cpu::execute(Instruction instruction,
         case Instruction::SetXRandomByteANDKK:
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
-            this->graphics->draw_sprite(this->registers[x_register],
+            if(this->graphics->draw_sprite(this->registers[x_register],
                                         this->registers[y_register],
                                         &this->memory[i],
-                                        nth_sprite);
+                                        nth_sprite)) {
+                this->registers[15] = 0x01;
+            }
             break;
         case Instruction::SkipNextInstructionKeyXPressed:
             if (this->keyboard[this->registers[x_register]]) {
@@ -232,8 +234,6 @@ void Cpu::load_rom()
         this->memory[index] = (uint8_t) *start;
         index+=1;
     }
-
-
 
     f1.close();
 }

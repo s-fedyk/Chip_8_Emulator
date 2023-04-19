@@ -10,7 +10,7 @@
 
 class GraphicsAdapter {
     public:
-    virtual void draw_sprite(uint8_t x,uint8_t y, uint8_t* sprite, uint8_t sprite_length)=0;
+    virtual int draw_sprite(uint8_t x,uint8_t y, uint8_t* sprite, uint8_t sprite_length)=0;
     virtual void clear()=0;
 };
 
