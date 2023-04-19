@@ -35,6 +35,7 @@ private:
     uint16_t pc = 0x200; // program starts at 0x200. store sprites and stuff before that
     uint8_t sp = 0x00; //stack pointer
     uint8_t fc = 0x00; // carry flag, carry register is at position 15
+    uint8_t delay = 0x00; // delay timer
     GraphicsAdapter *graphics;
     InputAdapter *input;
     const uint8_t FONTS[80] = {0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

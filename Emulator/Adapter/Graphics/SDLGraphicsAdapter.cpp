@@ -39,8 +39,19 @@ int SDLGraphicsAdapter::draw_sprite(uint8_t x,
  */
 int SDLGraphicsAdapter::draw_buffer(uint8_t x, uint8_t y)
 {
-    if (x > 64 || y > 32 || x < 0 || y < 0) {
-        std::cout << "Warning: out of bounds draw occured\n";
+
+    //wrap around
+    if (x >= 64){
+        x = 0;
+    }
+    if (x < 0){
+        x = 63;
+    }
+    if (y >= 32) {
+        y = 0;
+    }
+    if (y < 0) {
+        y = 31;
     }
 
     SDL_SetRenderDrawColor(this->renderer, 0,0,0,0);

@@ -15,7 +15,6 @@ int SDLInputAdapter::poll_for_input_no_blocking(bool keyboard[])
     {
         if (event.type == SDL_QUIT)
         {
-            std::cout << "exiting" << std::endl;
             return -1;
         }
         if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
@@ -82,12 +81,10 @@ uint8_t SDLInputAdapter::poll_for_input_blocking()
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_KEYDOWN:
-                    std::cout << "keypress occured" << event.key.keysym.sym << std::endl;
                     switch (event.key.keysym.sym) {
                         case SDLK_0:
                             return 0x00;
                         case SDLK_1:
-                            std::cout << "returning 1\n";
                             return 0x01;
                         case SDLK_2:
                             return 0x02;
@@ -119,7 +116,6 @@ uint8_t SDLInputAdapter::poll_for_input_blocking()
                             return 0x0F;
                     }
                 case SDL_KEYUP:
-                    std::cout << "keypress occured" << event.key.keysym.sym << std::endl;
                     switch (event.key.keysym.sym) {
                         case SDLK_0:
                             return 0x00;

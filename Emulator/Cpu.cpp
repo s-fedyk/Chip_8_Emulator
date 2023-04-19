@@ -23,6 +23,9 @@ void Cpu::start()
         if (this->input->poll_for_input_no_blocking(this->keyboard) < 0) {
             break;
         }
+        if (this->delay) {
+            this->delay -= 1;
+        }
 
         uint16_t instruction = load(this->pc);
         // registers are uint_4
@@ -108,12 +111,15 @@ int Cpu::execute(Instruction instruction,
             break;
         case Instruction::OrXWithY:
             this->registers[x_register] = this->registers[x_register] | this->registers[y_register];
+            this->registers[15] = 0x00;
             break;
         case Instruction::AndXWithY:
             this->registers[x_register] = this->registers[x_register] & this->registers[y_register];
+            this->registers[15] = 0x00;
             break;
         case Instruction::XORXWithY:
             this->registers[x_register] = this->registers[x_register] ^ this->registers[y_register];
+            this->registers[15] = 0x00;
             break;
         case Instruction::AddXWithYSetCarry:
             this->fc = (uint16_t(this->registers[x_register] + this->registers[y_register]) > 255) ? 0x01 : 0x00;
@@ -152,6 +158,7 @@ int Cpu::execute(Instruction instruction,
             this->pc = this->registers[0] + mem_addr - 2;
             break;
         case Instruction::SetXRandomByteANDKK:
+            this->registers[x_register] = (rand() % 255) & constant;
             break;
         case Instruction::DrawNthSpriteAtXYSetCollision:
             if(this->graphics->draw_sprite(this->registers[x_register],
@@ -172,11 +179,13 @@ int Cpu::execute(Instruction instruction,
             }
             break;
         case Instruction::PlaceIntoXDelayTimer:
+            this->registers[x_register] = this->delay;
             break;
         case Instruction::WaitAndPlaceKeyIntoX:
             this->registers[x_register] = this->input->poll_for_input_blocking();
             break;
         case Instruction::SetDelayTimerToX:
+            this->delay = this->registers[x_register];
             break;
         case Instruction::SetSoundTimerToX:
             break;
@@ -184,6 +193,7 @@ int Cpu::execute(Instruction instruction,
             this->i += this->registers[x_register];
             break;
         case Instruction::SetIToSpriteAtDigitX:
+            this->i = this->registers[x_register] * sizeof(uint8_t);
             break;
         case Instruction::StoreBCDOfXAtI:
             this->memory[i] = (this->registers[x_register] / 100);
